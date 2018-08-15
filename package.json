@@ -1,0 +1,26 @@
+{
+  "name": "effect",
+  "version": "1.0.0",
+  "description": "Effect helper module",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaittoka/effect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaittoka/effect/issues"
+  },
+  "homepage": "https://github.com/jaittoka/effect#readme",
+  "devDependencies": {
+    "jest": "^23.5.0"
+  }
+}
