@@ -4,7 +4,11 @@ function run(eff) {
   if (!isEffect(eff)) {
     return eff;
   }
-  return Promise.resolve(eff.executor.call(null, ...eff.params));
+  try {
+    return Promise.resolve(eff.executor.call(null, ...eff.params));
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
 
 module.exports = run;
