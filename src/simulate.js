@@ -29,7 +29,7 @@ function simulate(eff, mocks, offset = 0, next = undefined) {
   }
 
   return Promise.resolve(mock.call(null, ...eff.params)).then(result =>
-    next ? simulate(next(result), mocks, offset + 1) : Promise.resolve(result)
+    next ? simulate(next(result), mocks, offset + 1) : result
   );
 }
 
