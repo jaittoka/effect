@@ -1,5 +1,6 @@
 const test = require("blue-tape");
 const Eff = require("../src/index");
+const simulate = require("../src/simulate");
 
 test("eff-function creates an effect object", t => {
   t.plan(2);
@@ -10,7 +11,6 @@ test("eff-function creates an effect object", t => {
 });
 
 test("run-function runs an effect as a promise", t => {
-  t.plan(1);
   const f = (a, b) => a + b;
   const eff = Eff.eff(f, "foo", "bar");
   return Eff.run(eff).then(actual =>
@@ -54,7 +54,7 @@ test("bind with longer chain", t => {
 test("simulate unit", t => {
   let called = false;
   const eff = Eff.unit("foo");
-  return Eff.simulate(eff, [
+  return simulate(eff, [
     param => {
       t.equal(param, "foo", "correct paramter to mock");
       called = true;
@@ -68,7 +68,7 @@ test("simulate unit with bind", t => {
   let called = 0;
 
   const eff = Eff.bind(Eff.unit("foo"), x => Eff.unit("bar"));
-  return Eff.simulate(eff, [
+  return simulate(eff, [
     param => {
       t.equal(param, "foo", "param to first mock");
       called++;
@@ -99,7 +99,7 @@ test("simulate more complex chains", t => {
 
   let called = 0;
 
-  return Eff.simulate(getPersonWithCompany(PersonId), [
+  return simulate(getPersonWithCompany(PersonId), [
     id => {
       t.equal(id, PersonId, "Param to first mock");
       called++;
@@ -126,4 +126,17 @@ test("simulate more complex chains", t => {
   ]).then(() => {
     t.equal(called, 3, "All mocks called");
   });
+});
+
+test("Giving too few mocks", t => {
+  const eff = Eff.bind(Eff.unit("foo"), x => Eff.unit("bar"));
+  return simulate(eff, [x => x])
+    .then(() => t.fail("Should throw an error"))
+    .catch(e =>
+      t.equal(
+        e.message,
+        "The effect chain contains more steps than was given in the mocks",
+        "Should throw a correct error"
+      )
+    );
 });
