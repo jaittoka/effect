@@ -1,13 +1,13 @@
 {
   "name": "effect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Effect helper module",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "jest"
+    "test": "node tests/eff.test.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jaittoka/effect#readme",
   "devDependencies": {
-    "jest": "^23.5.0"
+    "tap-spec": "^5.0.0",
+    "blue-tape": "^1.0.0"
   }
 }
