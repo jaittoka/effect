@@ -1,5 +1,3 @@
-const EFF_TAG = Symbol();
-
 function EXECUTE_BIND(eff, next) {
   return run(eff).then(a => {
     const nextEffect = next(a);
@@ -15,15 +13,16 @@ function EXECUTE_UNIT(v) {
   return Promise.resolve(v);
 }
 
-function make(obj) {
-  return { ...obj, _ef_tag_: EFF_TAG };
-}
-
 function isEffect(value) {
   return (
-    typeof value === "object" && value._ef_tag_ === EFF_TAG,
-    typeof value.executor === "function" && Array.isArray(value.params)
+    typeof value === "object" &&
+    typeof value.executor === "function" &&
+    Array.isArray(value.params)
   );
+}
+
+function make(executor, params) {
+  return { executor, params };
 }
 
 function isUnit(eff) {
@@ -35,15 +34,15 @@ function isBind(eff) {
 }
 
 function eff(executor, ...params) {
-  return make({ executor, params });
+  return make(executor, params);
 }
 
 function bind(eff, next) {
-  return make({ executor: EXECUTE_BIND, params: [eff, next] });
+  return make(EXECUTE_BIND, [eff, next]);
 }
 
 function unit(value) {
-  return make({ executor: EXECUTE_UNIT, params: [value] });
+  return make(EXECUTE_UNIT, [value]);
 }
 
 function run(eff) {
